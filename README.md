@@ -10,6 +10,7 @@ Download the `kadobe.dll` file from Releases and at the folder location of your 
 
 On a Windows computer, the full path likely looks something like:
 ```C:\Users\{USER_NAME}\AppData\Local\Adobe\Animate {VERSION}\{LANGUAGE_CODE}\Configuration\External Libraries```
+
 The dynamic library should now be properly installed.
 
 Download the several `.jsfl` extension files from Releases and as you did above in the Adobe Animate configurations folder, place in `Configuration/Commands`
