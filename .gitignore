@@ -1,0 +1,17 @@
+build/**
+deps/**
+local/**
+**/Makefile
+*.txt
+*.cmake
+
+*.o
+*.so
+*.a
+*.dll
+*.exe
+
+*.tar.gz
+*.zip
+releases
+releases/*
