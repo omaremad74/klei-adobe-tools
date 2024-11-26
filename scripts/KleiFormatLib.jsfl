@@ -8,15 +8,15 @@ fl.outputPanel.clear()
 
 //Keep in sync with common.hpp's KLEI_FORMATS enum definition
 KLEI_FORMATS = {
-    DONT_STARVE				: 0,
-    DONT_STARVE_TOGETHER	: 0,
-    EETS_MUNCHIES			: 1,
-    SHANK 					: 2,
-    INVISIBLE_INC			: 3,
-    MARK_OF_THE_NINJA		: 4,
-    GRIFTLANDS				: 5,
-    HOT_LAVA				: 6,
-    ROTWOOD					: 7,
+    DONT_STARVE             : 0,
+    DONT_STARVE_TOGETHER    : 0,
+    EETS_MUNCHIES           : 1,
+    SHANK                   : 2,
+    INVISIBLE_INC           : 3,
+    MARK_OF_THE_NINJA       : 4,
+    GRIFTLANDS              : 5,
+    HOT_LAVA                : 6,
+    ROTWOOD                 : 7,
     OXYGEN_NOT_INCLUDED     : 8, //No tex, just png.
 }
 
