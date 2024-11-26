@@ -29,9 +29,9 @@ enum class KLEI_FORMATS : uint8_t {
 };
 
 static uint32_t kstrhash(const std::string& str) {
-	uint32_t hash = 0;
-	for (const char c : str) {
-		hash = (tolower(c) + (hash << 6) + (hash << 16) - hash);
-	}
-	return hash;
+    uint32_t hash = 0;
+    for (const char c : str) {
+        hash = (tolower(c) + (hash << 6) + (hash << 16) - hash);
+    }
+    return hash;
 }

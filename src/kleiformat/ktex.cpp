@@ -84,7 +84,7 @@ void KTex::DecompileDontStarveFormat(std::istream& ktex) {
         read_bin_data(ktex, mip.height);
         read_bin_data(ktex, mip.pitch);
         read_bin_data(ktex, mip.data_size);
-	}
+    }
 
     bool is_compressed = m_Flags.spec.compression == COMPRESSION_FORMATS::DXT1 || 
                          m_Flags.spec.compression == COMPRESSION_FORMATS::DXT3 || 
@@ -102,7 +102,7 @@ void KTex::DecompileDontStarveFormat(std::istream& ktex) {
             squish::DecompressImage(rgba, mip.width, mip.height, mipmap_data, squish_compression_type);
 
             mip.data.update(rgba, NUM_PIXEL_DATA);
-		    delete[] rgba;
+            delete[] rgba;
         } else {
             mip.data.update(mipmap_data, mip.data_size);
         }
@@ -154,11 +154,11 @@ void KTex::WriteImage(const std::filesystem::path& outpath) {
 void KTex::WriteDontStarveFormatImage(const std::filesystem::path& outpath) {
     const KTex::MipMap& mip = m_MipMaps[0];
     Magick::Image png;
-	png.read(mip.data, Magick::Geometry(mip.width, mip.height), 8, "RGBA");
+    png.read(mip.data, Magick::Geometry(mip.width, mip.height), 8, "RGBA");
     png.flip();
     png.magick("png");
-	png.defineValue("png", "color-type", "6"); // png color type 6 means RGBA
-	png.write(outpath.string());
+    png.defineValue("png", "color-type", "6"); // png color type 6 means RGBA
+    png.write(outpath.string());
 }
 
 void KTex::WriteRotwoodOrGriftlandsFormatImage(const std::filesystem::path& outpath) {

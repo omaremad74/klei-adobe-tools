@@ -9,8 +9,8 @@
 // Basic logging implementation
 
 class Logger {
-	public:
-		Logger(const Logger&) = delete;
+    public:
+        Logger(const Logger&) = delete;
 
         static Logger& Get(const std::string& path = "") {
             static Logger logger(path);
@@ -38,7 +38,7 @@ class Logger {
             logger.log_stream.close();
         }
 
-	private:
+    private:
         Logger(const std::string& path);
 
         std::string m_LogPath;

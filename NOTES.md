@@ -201,9 +201,9 @@ def strhash(str):
             + Hide Head Animation Hash (uint32_t) NOTE: If this is 4100639152 (aka the hash of "head_anim") then some extra animation logic happens, Haha so weird!
                 + Proof!: 
                     ```if (new KAnimHashedString(reader.ReadInt32()) == KGlobalAnimParser.ANIM_HASH_HEAD_ANIM)
-					{
-						frame.hasHead = true;
-					}
+                    {
+                        frame.hasHead = true;
+                    }
                     ```
             + Colour: a, b, g, r (all floats)
             + Matrix: a, b, c, d, tx, ty, tz (All floats)

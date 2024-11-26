@@ -12,8 +12,8 @@ LogPrint - To print to the log from the JavaScript end
 
 // Helper functions
 static std::filesystem::path GetPath(JSContext* ctx, JSValue value) {
-	uint32_t  path_size = 0;
-	uint16_t* path_ptr  = nullptr;
+    uint32_t  path_size = 0;
+    uint16_t* path_ptr  = nullptr;
 
     if (!JS_ValueToString(ctx, value, &path_ptr, &path_size))
         throw STRINGS::JSAPI::UNABLE_TO_READ_STRING;
@@ -46,7 +46,7 @@ static bool DecompileKleiFormat(JSContext* ctx, JSObject* obj, unsigned int argc
         return false;
 
     const std::filesystem::path folder_path = GetPath(ctx, argv[0]);
-	const std::filesystem::path out_path = GetPath(ctx, argv[1]);
+    const std::filesystem::path out_path = GetPath(ctx, argv[1]);
     long js_game_format;
 
     if (!JS_ValueToInteger(ctx, argv[1], &js_game_format))

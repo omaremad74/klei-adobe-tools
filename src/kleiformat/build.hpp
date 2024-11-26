@@ -11,7 +11,7 @@ class Build {
             float x, y, z, u, v, w;
         };
 
-		struct frame {
+        struct frame {
             float x, y, w, h;
             uint32_t num, duration, num_vertices, vb_start_index;
             std::vector<vertex> vertices;
@@ -23,14 +23,14 @@ class Build {
             std::vector<frame> frames;
         };
 
-	public:
+    public:
         //
         friend class XFL;
         friend class Anim;
         friend class KTex;
 
         //Load a build(.bin) to object
-		Build(const std::filesystem::path& bildpath, KLEI_FORMATS game_format);
+        Build(const std::filesystem::path& bildpath, KLEI_FORMATS game_format);
         //Export and write atlas's images at out path
         void ExportAtlas(const std::filesystem::path& out_path) const;
         //Export and return list of atlas images (for XFL)
@@ -45,7 +45,7 @@ class Build {
         uint32_t m_Version;
         KLEI_FORMATS m_BildType;
 
-	private:
+    private:
         uint32_t m_NumSymbols;
         uint32_t m_NumFrames;
         uint32_t m_NumMaterials;

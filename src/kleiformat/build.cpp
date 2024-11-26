@@ -124,9 +124,9 @@ std::vector<Magick::Image> Build::ExportAtlas() const {
             sprite.crop(Magick::Geometry(std::floor(w * mip.width + 0.5), std::floor(h * mip.height + 0.5), std::floor(mip.width * u), std::floor(mip.height * v)));
 
             Magick::Geometry scaling_geo(frame.w, frame.h);
-		    scaling_geo.aspect(true);
+            scaling_geo.aspect(true);
 
-		    sprite.resize(scaling_geo);
+            sprite.resize(scaling_geo);
             sprite.flip();
             sprite.magick("png");
             sprite.defineValue("png", "color-type", "6"); //color-type 6 means RGBA https://www.w3.org/TR/PNG-Chunks.html

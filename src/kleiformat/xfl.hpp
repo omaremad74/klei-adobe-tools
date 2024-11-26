@@ -41,9 +41,9 @@ LIBRARY ->
 
 // A class to hold data for Adobe's XFL file type (An uncompressed animation project making use of xml)
 class XFL {
-	public:
+    public:
         //Load an existing xfl project to object
-		XFL(const std::filesystem::path& folderpath);
+        XFL(const std::filesystem::path& folderpath);
         //Load build+bank to object
         XFL(const Anim& anim, const Build& bild);
 
@@ -54,7 +54,7 @@ class XFL {
         //Add build from klei format Build
         void AddBuildFromKleiFormat(const Build& bild);
 
-	private:
+    private:
         enum LAYER_TYPE : uint8_t {
             NORMAL  = 0,
             GUIDE   = 1,

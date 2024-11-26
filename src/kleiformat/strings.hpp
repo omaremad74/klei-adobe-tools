@@ -3,21 +3,21 @@
 #define GLOBAL_STRING constexpr inline const char*
 
 namespace STRINGS {
-	namespace ANIMATION_ERRORS {
-		GLOBAL_STRING INCORRECT_MAGIC = "[ERROR] This is not a valid Klei ANIM file!";
-		GLOBAL_STRING INVALID_VERSION = "We can't export to this KAnim version for it doesn't exist!";
-	};
+    namespace ANIMATION_ERRORS {
+        GLOBAL_STRING INCORRECT_MAGIC = "[ERROR] This is not a valid Klei ANIM file!";
+        GLOBAL_STRING INVALID_VERSION = "We can't export to this KAnim version for it doesn't exist!";
+    };
 
-	namespace BUILD_ERRORS {
-		GLOBAL_STRING INCORRECT_MAGIC = "[ERROR] This is not a valid Klei BILD file!";
+    namespace BUILD_ERRORS {
+        GLOBAL_STRING INCORRECT_MAGIC = "[ERROR] This is not a valid Klei BILD file!";
         GLOBAL_STRING INVALID_VERSION = "[ERROR] We can't export to this KBild version for it doesn't exist!";
         GLOBAL_STRING INCORRECT_VERT_COUNT = "[ERROR] Frame {} for Symbol {} has an incorrect amount of vertices. It should be divisible by 6 as it is meant to be constructed of pairs of two triangles.";
-	};
+    };
 
-	namespace TEXTURE_ERRORS {
-		GLOBAL_STRING INCORRECT_MAGIC = "[ERROR] This is not a valid Klei KTEX file!";
+    namespace TEXTURE_ERRORS {
+        GLOBAL_STRING INCORRECT_MAGIC = "[ERROR] This is not a valid Klei KTEX file!";
         GLOBAL_STRING INVALID_VERSION = "[ERROR] We can't export to this KTex version for it doesn't exist!";
-	};
+    };
 
     namespace ZIP_ERRORS {
         GLOBAL_STRING ERROR_CODE = "[ERROR] Received error when trying to open a zip file: {}";
@@ -51,10 +51,10 @@ namespace STRINGS {
 };
 
 namespace K_MAGICS {
-	GLOBAL_STRING ANIM = "ANIM";
-	GLOBAL_STRING BILD = "BILD";
-	GLOBAL_STRING TEX  = "KTEX";
-	GLOBAL_STRING XFL  = "PROXY-CS5"; //Not a Klei magic technically.
+    GLOBAL_STRING ANIM = "ANIM";
+    GLOBAL_STRING BILD = "BILD";
+    GLOBAL_STRING TEX  = "KTEX";
+    GLOBAL_STRING XFL  = "PROXY-CS5"; //Not a Klei magic technically.
 }
 
 #undef GLOBAL_STRING

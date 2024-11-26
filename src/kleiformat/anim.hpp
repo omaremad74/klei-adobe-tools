@@ -27,13 +27,13 @@ class Anim {
             std::vector<frame> frames;
         };
 
-	public:
+    public:
         //
         friend class XFL;
         friend class Build;
 
         //Load an anim(.bin) file to object
-		Anim(const std::filesystem::path& animpath, KLEI_FORMATS game_format);
+        Anim(const std::filesystem::path& animpath, KLEI_FORMATS game_format);
         //Load a stream expected to contain anim data to object
         Anim(std::istream& kanim, KLEI_FORMATS game_format);
 
@@ -51,7 +51,7 @@ class Anim {
         // Read a stream into our object
         void ReadStream(std::istream& kanim, KLEI_FORMATS game_format);
 
-	private:
+    private:
 
         uint32_t m_NumElementRefs;
         uint32_t m_NumFrames;

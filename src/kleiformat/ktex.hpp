@@ -9,29 +9,29 @@
 //SEE NOTES.md FOR BUILD FORMATS
 
 class KTex {
-	public:
+    public:
         friend class Build;
         //
         enum COMPRESSION_FORMATS : uint32_t {
-			DXT1 = 0,
+            DXT1 = 0,
             DXT3 = 1,
             DXT5 = 2,
             RGBA = 3
-		};
+        };
 
-		enum TEXTURE_TYPES : uint32_t {
-			ONE_DIMENSION = 0,
+        enum TEXTURE_TYPES : uint32_t {
+            ONE_DIMENSION = 0,
             TWO_DIMENSION = 1
-		};
+        };
 
         //No loaded data.
         KTex();
         //Name loaded.
         KTex(const std::string& name);
-		//Load an image to convert into texture
-		KTex(const std::string& name, const Magick::Image img);
-		//Load existing KTEX
-		KTex(const std::string& name, const std::filesystem::path& texpath, KLEI_FORMATS tex_type);
+        //Load an image to convert into texture
+        KTex(const std::string& name, const Magick::Image img);
+        //Load existing KTEX
+        KTex(const std::string& name, const std::filesystem::path& texpath, KLEI_FORMATS tex_type);
         //Read a tex file(zipped or folder path) into class
         void ReadFile(const std::filesystem::path& imagepath, KLEI_FORMATS tex_type);
         //Read a stream into class
@@ -43,26 +43,26 @@ class KTex {
 
         static constexpr inline const uint32_t COMPRESSION_CONVERT[3] = {squish::kDxt1, squish::kDxt3, squish::kDxt5};
 
-	//
-	private:
+    //
+    private:
         struct MipMap {
-	        uint16_t width, height, pitch;
+            uint16_t width, height, pitch;
             uint32_t data_size;
-	        Magick::Blob data;
+            Magick::Blob data;
         };
 
         struct MipMapDDS {
-	        uint16_t width, height, pitch;
-	        Magick::Image image;
+            uint16_t width, height, pitch;
+            Magick::Image image;
         };
 
         struct image_specs { //4 bytes
             uint32_t platform       : 4;
-			uint32_t compression    : 5;
-			uint32_t tex_type       : 4;
-			uint32_t mipmap_count   : 5;
-			uint32_t flags          : 2;
-			uint32_t fill           : 12;
+            uint32_t compression    : 5;
+            uint32_t tex_type       : 4;
+            uint32_t mipmap_count   : 5;
+            uint32_t flags          : 2;
+            uint32_t fill           : 12;
         };
 
         union flags {
@@ -71,7 +71,7 @@ class KTex {
         };
 
         flags m_Flags;
-		std::vector<MipMap> m_MipMaps; //DS/T
+        std::vector<MipMap> m_MipMaps; //DS/T
         MipMapDDS m_DDS_Data; //Rotwood+Griftlands
 
         std::string m_Name;
