@@ -2,7 +2,6 @@ build/**
 deps/**
 local/**
 **/Makefile
-*.txt
 *.cmake
 
 *.o
