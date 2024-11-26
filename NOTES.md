@@ -328,8 +328,7 @@ I'm unsure what 'Parent' refers to.
 CM index and CA index seems to refer to specific color logic. I am lost here:
 https://github.com/Psimage/KWADTool/pull/1/commits/9550bb7b843360ad876bf04a59e56ea7da05767f
 
-For encoded_strings, see:
-	char[len + (4 - len % 4) % 4]  : string contents padded to maintain DWORD alignment
+For encoded_strings, see: `char[len + (4 - len % 4) % 4]  : string contents padded to maintain DWORD alignment`
 
 ### KWAD
 
