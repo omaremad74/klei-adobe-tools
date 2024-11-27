@@ -18,6 +18,7 @@ KLEI_FORMATS = {
     HOT_LAVA                : 6,
     ROTWOOD                 : 7,
     OXYGEN_NOT_INCLUDED     : 8, //No tex, just png.
+    //DREAD_PILOTS : 9,
 }
 
 STRINGS = {
@@ -33,6 +34,12 @@ STRINGS = {
     COMMON_ERRORS : {
         UNSAVED_DOC : "The document is unsaved and has no proper directory path, please 'Save As' before you try to compile!",
     },
+}
+
+ITEM_TYPES = {
+    BUTTON      : "button",
+    GRAPHIC     : "graphic",
+    MOVIE_CLIP  : "movie clip",
 }
 
 //
@@ -90,8 +97,9 @@ KleiFormatExporter = function() {
 KleiFormatExporter.prototype.ExportAnim = function(version) {
     this.anim_markers_layer = this.timeline.layers[0]
 
-    if (this.anim_markers_layer.name.toUpperCase() != "ANIMATIONS") throw KFormatError("EXPORT_ANIMATION", "NO_ANIMATION_LAYER")
-    if (this.anim_markers_layer.layerType != "guide")               throw KFormatError("EXPORT_ANIMATION", "NOT_GUIDE")
+    if (this.timeline.libraryItem.itemType != ITEM_TYPES.MOVIE_CLIP)    throw KFormatError("EXPORT_ANIMATION", "WRONG_SYMBOL_TYPE")
+    if (this.anim_markers_layer.name.toUpperCase() != "ANIMATIONS")     throw KFormatError("EXPORT_ANIMATION", "NO_ANIMATION_LAYER")
+    if (this.anim_markers_layer.layerType != "guide")                   throw KFormatError("EXPORT_ANIMATION", "NOT_GUIDE")
 
     var anims_xml = <Anims></Anims>
 
@@ -177,7 +185,7 @@ KleiFormatExporter.prototype.ExportBuild = function(version) {
     for (var i = 0; i < this.library.items.length; i++) {
         var item = this.library.items[i]
         if (GetBaseFolderName(item) != "FORCEEXPORT") continue
-        if (item.itemType != "graphic")               throw KFormatError("EXPORT_BUILD", "WRONG_SYMBOL_TYPE")
+        if (item.itemType != ITEM_TYPES.GRAPHIC)      throw KFormatError("EXPORT_BUILD", "WRONG_SYMBOL_TYPE")
 
         var symbol = <Symbol></Symbol>
         symbol.@name = GetLibraryName(item)
