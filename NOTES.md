@@ -40,7 +40,7 @@ def strhash(str):
 
 # Klei's Binary Formats
 
-## Don't Starve / Together
+## Don't Starve / Together ![DS](https://github.com/user-attachments/assets/4ba872f2-eee4-4aa9-8525-bfdea6a092f2)  ![DST](https://github.com/user-attachments/assets/a0fa0d14-ab59-48c3-9308-47e4143e8491)
 
 ### ANIM (Version 4)
 + "ANIM"
@@ -114,7 +114,7 @@ def strhash(str):
 + For each MipMap:
     Read mipmap data with data size
 
-## Rotwood
+## Rotwood ![rotwood](https://github.com/user-attachments/assets/03b04f0d-5508-4644-abcf-16d992ca4228)
 
 ### ANIM (Version 5) NOTE: This is labelled as version 5, but do not be fooled! It is not the same as Oxygen Not Includeds format despite also being labelled as version 5!
 + "ANIM"
@@ -183,7 +183,7 @@ def strhash(str):
 + height (uint16_t)
 + DDS file contents (read to the end of the file)
 
-## Oxygen Not Included
+## Oxygen Not Included ![oni](https://github.com/user-attachments/assets/2b53824a-8d68-4857-9e84-12d7859dbe91)
 
 ### ANIM (Version 5)
 + "ANIM"
@@ -246,7 +246,7 @@ def strhash(str):
 ### KTEX
 + No unique format! Just a png file! (In Unity's compressed resource files)
 
-## Griftlands
+## Griftlands ![griftlands](https://github.com/user-attachments/assets/d7f7deb6-76bb-49a2-8b1b-3168c0d733a0)
 
 ### ANIM (Version 7)
 + "ANIM"
@@ -320,7 +320,7 @@ I've yet to understand what a 'pbox' is!
 + For each splice:
     + PBox: U1, V1, U2, V2, n_U1, n_V1, n_U2, n_V2 (all floats)
 
-## Invisible Inc.
+## Invisible Inc. ![invisible](https://github.com/user-attachments/assets/e2fe70ec-ca45-49e6-8b30-738f309135aa)
 
 NOTES: Invisible Inc uses .KWAD files ("Klei, Where's All the Data?") that contain compressed animations, builds, and textures all together
 It is unlikely I will get to supporting KWAD in a timely manner. Sorry! But the documentation for its format is here :3
@@ -399,12 +399,12 @@ For encoded_strings, see: `char[len + (4 - len % 4) % 4]  : string contents padd
         (b, d, X, ty)
         (X, X, X, X )
 
-## Mark Of The Ninja
+## Mark Of The Ninja ![motn](https://github.com/user-attachments/assets/c1730b9f-ce09-460d-b2cb-35487a5e4e95)
 + TODO
 
-## Eets
+## Eets ![eets_munchies](https://github.com/user-attachments/assets/34ca1285-1167-4a3d-8075-8d7b8a58e4f8)
 + TODO
 
-## Shank
+## Shank ![shank](https://github.com/user-attachments/assets/2a6c2b2c-8970-4274-9d06-d48502a02809)
 + TODO
 + Shank uses xml and dds instead of binary format and ktex
