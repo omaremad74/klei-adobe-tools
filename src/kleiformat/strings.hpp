@@ -25,6 +25,7 @@ namespace STRINGS {
         GLOBAL_STRING UNABLE_TO_STAT_FILE = "[ERROR] Unable to stat file {} in {}. Error: {}";
         GLOBAL_STRING UNABLE_TO_OPEN_FILE = "[ERROR] Unable to open file: {} in {}. Error: {}";
         GLOBAL_STRING UNABLE_TO_READ_FILE = "[ERROR] Unable to read file contents: {} in {}. Error: {}";
+        GLOBAL_STRING UNABLE_TO_ADD_DIR = "[ERROR] Unable to add directory: {}, to zip archive.";
     };
 
     //
@@ -45,7 +46,7 @@ namespace STRINGS {
 
     // JS API errors
     namespace JSAPI {
-        GLOBAL_STRING UNABLE_TO_READ_STRING = "[ERROR] We were unable to read a string provided by the Javascript Context!";
+        GLOBAL_STRING UNABLE_TO_READ_STRING = "[ERROR] We were unable to read a string provided by the JavaScript Context!";
     };
     
 };

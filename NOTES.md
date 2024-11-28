@@ -1,18 +1,18 @@
 # Notes to know before reading on the formats
 
 ## FACINGS FORMAT
-+ FACING_RIGHT      = 0000 0001 = 1 << 0
-+ FACING_UP         = 0000 0010 = 1 << 1
-+ FACING_LEFT       = 0000 0100 = 1 << 2
-+ FACING_DOWN       = 0000 1000 = 1 << 3
-+ FACING_UPRIGHT    = 0001 0000 = 1 << 4
-+ FACING_UPLEFT     = 0010 0000 = 1 << 5
-+ FACING_DOWNRIGHT  = 0100 0000 = 1 << 6
-+ FACING_DOWNLEFT   = 1000 0000 = 1 << 7
++ FACING_RIGHT      = 1 << 0
++ FACING_UP         = 1 << 1
++ FACING_LEFT       = 1 << 2
++ FACING_DOWN       = 1 << 3
++ FACING_UPRIGHT    = 1 << 4
++ FACING_UPLEFT     = 1 << 5
++ FACING_DOWNRIGHT  = 1 << 6
++ FACING_DOWNLEFT   = 1 << 7
 
 ## Hashing
 
-Klei hashes their strings through this logic (For the games i've seen so far anyways, Invisible Inc seems to have different hashing logic it seems?):
+Klei hashes their strings through this logic (For Don't Starve and Rotwood at least, Invisible Inc seems to have different hashing logic it seems?):
 
 ```
 def strhash(str):
@@ -27,15 +27,15 @@ def strhash(str):
 
 + 'x' x-coordinate of the vertex
 + 'y' y-coordinate of the vertex
-+ 'z' z-coordinate of the vertex. In the case of 2D animated games like DS/T or Rotwood this is always going to be 0!
-+ 'u' 
-+ 'v' 
++ 'z' z-coordinate of the vertex. (In the case of 2D animated games like DS/T or Rotwood this is always going to be 0!)
++ 'u' horizontal axis of texture
++ 'v' vertical axis of texture
 + 'w' texture/material sampler
 
 ## Naming schemes
 
-'Root Symbols' and banks refer to one another.
-'Materials' and atlases refer to one another.
+'Root Symbols' and banks refer to one another.  
+'Materials' and atlases refer to one another.  
 'Folders' and layers refer to one another.
 
 # Klei's Binary Formats
@@ -61,6 +61,7 @@ def strhash(str):
             + For each event:
             + Event Hash
         + Num Elements (uint32_t)
+        + For each element:
             + Symbol Hash (uint32_t)
             + Symbol Frame (uint32_t)
             + Folder Hash (uint32_t)
@@ -82,6 +83,7 @@ def strhash(str):
 + For each symbol:
     + Symbol Hash (uint32_t)
     + Num Frames (uint32_t)
+    + For each frame:
         + Frame Num (uint32_t)
         + Frame Duration (uint32_t)
         + Bounding Box: x, y, width, height (all floats)
@@ -130,9 +132,10 @@ def strhash(str):
     + For each frame:
         + x, y, width, height (all floats)
         + Num Events (uint32_t)
-            + For each event:
+        + For each event:
             + Event Hash
         + Num Elements (uint32_t)
+        + For each element:
             + Symbol Hash (uint32_t)
             + Symbol Frame (uint32_t)
             + Folder Hash (uint32_t)
@@ -159,6 +162,7 @@ def strhash(str):
 + For each symbol:
     + Symbol Hash (uint32_t)
     + Num Frames (uint32_t)
+    + For each frame:
         + Frame Num (uint32_t)
         + Frame Duration (uint32_t)
         + Bounding Box: x, y, width, height (all floats)
@@ -174,10 +178,10 @@ def strhash(str):
 
 ### KTEX 
 + "KTEX"
-+ some value, usually '2' (byte)
++ Some value, usually '2' (byte)
 + width (uint16_t)
 + height (uint16_t)
-+ DDS file contents (variable size, read to the end of the file)
++ DDS file contents (read to the end of the file)
 
 ## Oxygen Not Included
 
@@ -195,12 +199,14 @@ def strhash(str):
     + For each frame:
         + x, y, width, height (all floats)
         + Num Elements (uint32_t)
+        + For each element:
             + Symbol Hash (uint32_t)
             + Symbol Frame (uint32_t)
             + Folder Hash (uint32_t)
             + Hide Head Animation Hash (uint32_t) NOTE: If this is 4100639152 (aka the hash of "head_anim") then some extra animation logic happens, Haha so weird!
                 + Proof!: 
-                    ```if (new KAnimHashedString(reader.ReadInt32()) == KGlobalAnimParser.ANIM_HASH_HEAD_ANIM)
+                    ```
+                    if (new KAnimHashedString(reader.ReadInt32()) == KGlobalAnimParser.ANIM_HASH_HEAD_ANIM)
                     {
                         frame.hasHead = true;
                     }
@@ -298,12 +304,13 @@ NOTE: It seems Griftlands animations can have two names for animations.
 + some value, usually '2' (byte)
 + width (uint16_t)
 + height (uint16_t)
-+ DDS file contents (variable size, read to the end of the file)
++ DDS file contents (read to the end of the file)
 
 ### PLAX
 NOTES: 'What is plax?' It's Klei's implementation of parallax backgrounds! Despite being `.tex` they don't really have any texture data on their own 
 they contain data referencing other actual `KTEX` textures to perform logic on with different configurations in usage for scene backgrounds as far as I understand.
 I'm heavily referencing this lovely repositories work, I do not fully understand the format myself yet: https://github.com/instant-noodles/gltools/blob/master/src/gltex.py
+I've yet to understand what a 'pbox' is!
 + "PLAX"
 + Num Root (byte)
 + Width (int32_t)
@@ -311,7 +318,7 @@ I'm heavily referencing this lovely repositories work, I do not fully understand
 + Root Name (length in byte, string)
 + Num Splices (int32_t)
 + For each splice:
-    + PBox: U1, V1, U2, V2, n_U1, n_V1, n_U2, n_V2 (all floats) (what's a pbox!?)
+    + PBox: U1, V1, U2, V2, n_U1, n_V1, n_U2, n_V2 (all floats)
 
 ## Invisible Inc.
 
@@ -369,9 +376,9 @@ For encoded_strings, see: `char[len + (4 - len % 4) % 4]  : string contents padd
 + Total Num Transform (uint32_t)
 + For each transform:
     + 3D Affine Matrix: (16 floats)
-        (a, c, _, tx)
-        (b, d, _, ty)
-        (_, _, _, _ )
+        (a, c, X, tx)
+        (b, d, X, ty)
+        (X, X, X, X )
 + Event Strings (uint32_t, string)
 
 ### BILD
@@ -388,9 +395,9 @@ For encoded_strings, see: `char[len + (4 - len % 4) % 4]  : string contents padd
 + For each frame:
     + Model Resource Index (uint32_t)
     + 3D Affine Matrix: (16 floats)
-        (a, c, _, tx)
-        (b, d, _, ty)
-        (_, _, _, _ )
+        (a, c, X, tx)
+        (b, d, X, ty)
+        (X, X, X, X )
 
 ## Mark Of The Ninja
 + TODO
