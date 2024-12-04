@@ -6,22 +6,12 @@ Klei Adobe Tools is a lightweight dynamic plugin for Adobe Animate to allow conv
 
 ## Installation
 
-Download the `kadobe.dll` file from Releases and at the folder location of your Adobe Animate configurations folder, place in `Configuration/External Libraries`
-
-On a Windows computer, the full path likely looks something like:
+Download the `KAdobeTools.zip` file from Releases, and extract to:
 ```
-{DRIVE}:\Users\{USER_NAME}\AppData\Local\Adobe\Animate {VERSION}\{LANGUAGE_CODE}\Configuration\External Libraries
-```
-The dynamic library should now be properly installed.
-
-Download the several `.jsfl` extension files from Releases and as you did above in the Adobe Animate configurations folder, place in `Configuration/Commands`
-
-On a Windows computer, the full path likely looks something like:
-```
-{DRIVE}:\Users\{USER_NAME}\AppData\Local\Adobe\Animate {VERSION}\{LANGUAGE_CODE}\Configuration\Commands
+{DRIVE}:\Users\{USER_NAME}\AppData\Local\Adobe\Animate {VERSION}\{LANGUAGE_CODE}\Configuration
 ```
 
-Download the Don't Starve Mod Tools on steam. This is a temporary dependancy as we piggyback off these tools for compilation. It will be phased out once the library the 
+Download the Don't Starve Mod Tools on steam. This is a temporary dependancy as I piggyback off these tools for compilation. It will be phased out once the library the 
 library has it's own compilation functions implemented. This is only necessacary if you wish to compile, decompiling will work without the DS Mod Tools.
 
 ## Usage
