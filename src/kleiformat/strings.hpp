@@ -26,6 +26,9 @@ namespace STRINGS {
         GLOBAL_STRING UNABLE_TO_OPEN_FILE = "[ERROR] Unable to open file: {} in {}. Error: {}";
         GLOBAL_STRING UNABLE_TO_READ_FILE = "[ERROR] Unable to read file contents: {} in {}. Error: {}";
         GLOBAL_STRING UNABLE_TO_ADD_DIR = "[ERROR] Unable to add directory: {}, to zip archive.";
+        GLOBAL_STRING UNABLE_TO_ADD_SOURCE = "[ERROR] Unable to add source to zip archive, Error: {}";
+        GLOBAL_STRING UNABLE_TO_ADD_FILE = "[ERROR] Unable to add file to zip archive, Error: {}";
+        GLOBAL_STRING UNABLE_TO_ZIP_FOLDER = "[ERROR] We're unable to zip folder {}, because it's not even a folder!";
     };
 
     //

@@ -8,6 +8,8 @@
     + Griftlands
     + Rotwood
 
++ JSFL scripts can be optimized to only run nessacary exports if project is 'dirty' (has been changed/edited)
+
 + Use inheritance to support all the different game formats?
 
 + Installer script (Low priority)

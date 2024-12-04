@@ -16,7 +16,7 @@ static std::filesystem::path GetPath(JSContext* ctx, JSValue value) {
     uint16_t* path_ptr  = nullptr;
 
     if (!JS_ValueToString(ctx, value, &path_ptr, &path_size))
-        throw STRINGS::JSAPI::UNABLE_TO_READ_STRING;
+        throw std::runtime_error(STRINGS::JSAPI::UNABLE_TO_READ_STRING);
 
     return reinterpret_cast<char16_t*>(path_ptr);
 }
@@ -67,10 +67,6 @@ static bool DecompileKleiFormat(JSContext* ctx, JSObject* obj, unsigned int argc
         xfl_doc.ExportProject(out_path);
     } catch (const std::exception& e) {
         Logger::Print(e.what());
-    } catch (const std::string& e) {
-        Logger::Print(e);
-    } catch (const char* e) {
-        Logger::Print(e);
     }
 
     Logger::Print("DecompileKleiFormat End Execution");
@@ -82,17 +78,34 @@ static bool CompileKleiFormat(JSContext* ctx, JSObject* obj, unsigned int argc, 
     if (argc != 3)
         return false;
 
-    long anim_ver, bild_ver;
     const std::filesystem::path path_to_data = GetPath(ctx, argv[0]);
+    long js_game_format;
+    double scale;
 
-    if (!JS_ValueToInteger(ctx, argv[1], &anim_ver) || !JS_ValueToInteger(ctx, argv[2], &bild_ver))
+    if (!JS_ValueToInteger(ctx, argv[1], &js_game_format))
         return false;
 
-    const std::string command = std::format(
-        ""
-    );
+    if (!JS_ValueToDouble(ctx, argv[2], &scale))
+        return false;
 
-    std::system(command.c_str());
+    const KLEI_FORMATS game_format = static_cast<KLEI_FORMATS>(js_game_format);
+
+    try {
+        SaveFolderToZip(path_to_data);
+    } catch (const std::exception& e) {
+        Logger::Print(e.what());
+    }
+
+    //TODO Phase out DS Mod Tools dependency
+    const std::string command = std::format(
+       R""("cmd.exe /v /c "for /f "tokens=2*" %a in ('reg.exe query "HKEY_CURRENT_USER\Software\Valve\Steam" /v "SteamPath" ^| find /i "SteamPath"') do set STEAM_PATH=%b && echo STEAM_PATH: !STEAM_PATH! && cd !STEAM_PATH!\steamapps\common\Don't Starve Mod Tools\mod_tools\ && echo Compiling: && buildtools\windows\Python27\python.exe tools\scripts\buildanimation.py {} --scale {}"")""
+    , path_to_data.string() + ".zip", scale);
+
+    int errorcode = std::system(command.c_str());
+    if (errorcode) {
+        Logger::Print(std::format("CompileKleiFormat executed a command but returned errorcode: {}", errorcode));
+        return false;
+    }
 
     return true;
 }
@@ -101,7 +114,7 @@ static bool LogPrint(JSContext* ctx, JSObject* obj, unsigned int argc, JSValue a
     if (argc != 1)
         return false;
 
-    Logger::Print(GetPath(ctx, argv[0]).string()); // Bit bad, but I needed a quick and dirty way to convert utf16 to utf8.
+    Logger::Print(GetPath(ctx, argv[0]).string()); // Bit bad, but I needed a quick and dirty way to convert utf16 to utf8. And filesystem::path standard handles that :)
     return true;
 }
 

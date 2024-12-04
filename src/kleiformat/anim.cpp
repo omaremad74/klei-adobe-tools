@@ -18,7 +18,7 @@ Anim::Anim(const std::filesystem::path& animpath, KLEI_FORMATS game_format) {
         std::ifstream kanim(animpath / "anim.bin", std::ios::in | std::ios::binary);
 
         if (!kanim.is_open())
-            throw std::format(STRINGS::FILE_NOOPEN, "Anim::Anim(const std::filesystem::path& animpath, KLEI_FORMATS game_format)", animpath.string());
+            throw std::runtime_error(std::format(STRINGS::FILE_NOOPEN, "Anim::Anim(const std::filesystem::path& animpath, KLEI_FORMATS game_format)", animpath.string()));
 
         ReadStream(kanim, game_format);
 
@@ -38,7 +38,7 @@ void Anim::ReadStream(std::istream& kanim, KLEI_FORMATS game_format) {
     std::string magic;
     read_bin_string(kanim, magic, 4);
     if (magic != K_MAGICS::ANIM)
-        throw STRINGS::ANIMATION_ERRORS::INCORRECT_MAGIC;
+        throw std::runtime_error(STRINGS::ANIMATION_ERRORS::INCORRECT_MAGIC);
 
     read_bin_data(kanim, m_Version);
     read_bin_data(kanim, m_NumElementRefs);
@@ -124,6 +124,14 @@ std::string Anim::GetFolderName(const element& e) const {
 
 std::string Anim::GetSymbolName(const element& e) const {
     return m_SymbolHashesToNames.at(e.symbol_hash);
+}
+
+std::string Anim::GetFullAnimationName(const anim& a) const {
+    const std::string label = GetFacingsLabel(a.facings);
+    if (label != "_all" && label != "_unknown")
+        return a.name + label;
+    
+    return a.name;
 }
 
 size_t Anim::GetNumElements() const {

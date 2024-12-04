@@ -9,7 +9,7 @@ XFL::XFL(const std::filesystem::path& folderpath) {
 XFL::XFL(const Anim& anim, const Build& bild) {
     //Make sure these match!
     if (anim.m_AnimType != bild.m_BildType)
-        throw STRINGS::DIFFERING_FORMATS;
+        throw std::invalid_argument(STRINGS::DIFFERING_FORMATS);
 
     //TODO animations might reference symbols not in our build! add them too!
     AddAnimationFromKleiFormat(anim);
@@ -24,7 +24,7 @@ void XFL::ExportProject(const std::filesystem::path& folderpath) {
     std::ofstream xfl(xflpath, std::ios::out);
 
     if (!xfl.is_open())
-        throw std::format(STRINGS::FILE_NOOPEN, "XFL::ExportProject", xflpath.string());
+        throw std::runtime_error(std::format(STRINGS::FILE_NOOPEN, "XFL::ExportProject", xflpath.string()));
     
     xfl << K_MAGICS::XFL;
     xfl.close();
@@ -178,11 +178,11 @@ void XFL::AddAnimationFromKleiFormat(const Anim& anim) {
     m_FrameRate = anim.ValidateFrameRate();
 
     library_item& animations = m_LibraryItems.emplace_back("animations.xml", SYMBOL_TYPE::MOVIE_CLIP);
-    layer& animations_layer = animations.layers.emplace_back("ANIMATIONS", LAYER_TYPE::NORMAL);
+    layer& animations_layer = animations.layers.emplace_back("ANIMATIONS", LAYER_TYPE::GUIDE);
 
     uint32_t total_timeline_frames = 0; //also the start frame for the next animation guideline as we iterate.
     for (const auto& animation : anim.m_Anims) {
-        animations_layer.frames.emplace_back(total_timeline_frames, animation.num_frames, animation.name);
+        animations_layer.frames.emplace_back(total_timeline_frames, animation.num_frames, anim.GetFullAnimationName(animation));
         total_timeline_frames += animation.num_frames;
     }
 
@@ -277,7 +277,13 @@ void XFL::AddBuildFromKleiFormat(const Build& bild) {
         auto& item_layer = library_item.layers.emplace_back("sprites");
         item_layer.frames.reserve(bild_symbol.num_frames);
 
+        uint32_t last_added_frame = 0;
         for (const auto& bild_frame : bild_symbol.frames) {
+            if (last_added_frame < bild_frame.num) // Insert Empty frame range since our last frame!
+                item_layer.frames.emplace_back(last_added_frame, bild_frame.num-last_added_frame);
+
+            last_added_frame = bild_frame.num + bild_frame.duration;
+
             item_layer.frames.emplace_back(bild_frame.num, bild_frame.duration, std::format("IMPORT/{}-{}", symbol_name, bild_frame.num),
                 0, 1.0f, 0.0f, 0.0f, 1.0f, bild_frame.x, bild_frame.y, 0.0f);
         }

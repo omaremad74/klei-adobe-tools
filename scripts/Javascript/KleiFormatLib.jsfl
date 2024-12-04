@@ -5,6 +5,7 @@
 
 kadobe.Initialize(fl.configDirectory) // For logger and imagemagick
 fl.outputPanel.clear()
+fl.showIdleMessage(false)
 
 //Keep in sync with common.hpp's KLEI_FORMATS enum definition
 KLEI_FORMATS = {
@@ -18,7 +19,7 @@ KLEI_FORMATS = {
     HOT_LAVA                : 6,
     ROTWOOD                 : 7,
     OXYGEN_NOT_INCLUDED     : 8, //No tex, just png.
-    //DREAD_PILOTS : 9,
+    //DREAD_PILOTS          : 9,
 }
 
 STRINGS = {
@@ -94,6 +95,8 @@ KleiFormatExporter = function() {
     FLfile.createFolder(this.main_path) //Where our export data will go
 }
 
+// TODO we want to optimize this MUCH better to only update animations that have been edited since the last time!
+// How? I'll figure it out!
 KleiFormatExporter.prototype.ExportAnim = function(version) {
     this.anim_markers_layer = this.timeline.layers[0]
 
@@ -136,14 +139,14 @@ KleiFormatExporter.prototype.ExportAnim = function(version) {
             //start at 1, we don't care about the animation guideline layer! (0th layer)
             for (var l = 1; l < this.timeline.layerCount; l++) {
                 var frame_container = this.timeline.layers[l].frames[ff]
-                if (!frame_container) continue
+                if (!frame_container || frame_container.elements.length == 0) continue
                 if (frame_container.elements.length > 1) throw KFormatError("EXPORT_ANIMATION", "DUPLICATE_SYMBOL")
 
                 var symbol = frame_container.elements[0]
 
                 var element = <element></element>
                 element.@name = GetLibraryName(symbol.libraryItem)
-                element.@layername = this.timeline.layers[l].name,
+                element.@layername = this.timeline.layers[l].name
                 element.@frame = GetFrame(symbol, frame_container.startFrame, ff, symbol.libraryItem.timeline.frameCount)
                 element.@z_index = l - 1
                 //
@@ -184,7 +187,7 @@ KleiFormatExporter.prototype.ExportBuild = function(version) {
 
     for (var i = 0; i < this.library.items.length; i++) {
         var item = this.library.items[i]
-        if (GetBaseFolderName(item) != "FORCEEXPORT") continue
+        if (GetBaseFolderName(item) != "FORCEEXPORT" || item.constructor.name == "FolderItem") continue
         if (item.itemType != ITEM_TYPES.GRAPHIC)      throw KFormatError("EXPORT_BUILD", "WRONG_SYMBOL_TYPE")
 
         var symbol = <Symbol></Symbol>
@@ -205,7 +208,7 @@ KleiFormatExporter.prototype.ExportBuild = function(version) {
             var frame = <Frame></Frame>
             frame.@framenum = f
             frame.@duration = duration
-            frame.@image = symbol.@name + PadZeroes(f, 4) // exportToPNGSequence exports in the following format e.g. "test0001.png", "test0023.png"
+            frame.@image = symbol.@name + PadZeroes(f+1, 4) // exportToPNGSequence exports in the following format e.g. "test0001.png", "test0023.png", does not start at 0!
             frame.@w = width
             frame.@h = height
             frame.@x = x
@@ -215,6 +218,11 @@ KleiFormatExporter.prototype.ExportBuild = function(version) {
 
             f += duration - 1
         }
+
+        // (Omar) HACK!!!: The naming scheme of exportToPngSequence does not follow "test0001.png" if there's just one frame in the item's timeline!
+        // So, just slip in an extra blank key frame to get it to follow that naming scheme
+        if (item.timeline.frameCount == 1)
+            item.timeline.insertBlankKeyframe(1)
 
         item.exportToPNGSequence(this.main_path + "/" + symbol.@name + ".png");
 
@@ -253,12 +261,16 @@ CompileKleiFormat = function(game_format) {
     game_format = game_format ? game_format : KLEI_FORMATS.DONT_STARVE
 
     try {
+        Print("Compiling Klei Format for version: " + game_format)
+
         var exporter = new KleiFormatExporter()
         exporter.ExportAnim(game_format)
         exporter.ExportBuild(game_format)
 
         var data_path = FLfile.uriToPlatformPath(exporter.main_path)
-        kadobe.CompileKleiFormat(data_path, game_format)
+        kadobe.CompileKleiFormat(data_path, game_format, 1.0)
+
+        Print("Finished exporting")
     } catch(err) {
         Print("Caught exception while Exporting to Klei Format: " + err)
     }
@@ -284,6 +296,3 @@ DecompileKleiFormat = function(game_format) {
 
     kadobe.DecompileKleiFormat(data_path, output_path, game_format)
 }
-
-//DecompileKleiFormat(KLEI_FORMATS.DONT_STARVE)
-//CompileKleiFormat(KLEI_FORMATS.DONT_STARVE)

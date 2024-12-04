@@ -13,7 +13,7 @@ Build::Build(const std::filesystem::path& bildpath, KLEI_FORMATS game_format) {
         std::ifstream kbild(bildpath / "build.bin", std::ios::in | std::ios::binary);
 
         if (!kbild.is_open())
-            throw std::format(STRINGS::FILE_NOOPEN, "Build::Build(const std::filesystem::path& bildpath, KLEI_FORMATS game_format)", bildpath.string());
+            throw std::runtime_error(std::format(STRINGS::FILE_NOOPEN, "Build::Build(const std::filesystem::path& bildpath, KLEI_FORMATS game_format)", bildpath.string()));
 
         ReadStream(kbild, game_format, bildpath);
 
@@ -33,7 +33,7 @@ void Build::ReadStream(std::istream& kbild, KLEI_FORMATS game_format, const std:
     std::string magic;
     read_bin_string(kbild, magic, 4);
     if (magic != K_MAGICS::BILD)
-        throw STRINGS::BUILD_ERRORS::INCORRECT_MAGIC;
+        throw std::runtime_error(STRINGS::BUILD_ERRORS::INCORRECT_MAGIC);
 
     read_bin_data(kbild, m_Version);
     read_bin_data(kbild, m_NumSymbols);
@@ -69,9 +69,8 @@ void Build::ReadStream(std::istream& kbild, KLEI_FORMATS game_format, const std:
             read_bin_data(kbild, frame.num_vertices);
             frame.vertices.resize(frame.num_vertices);
 
-            if (frame.num_vertices % 6 != 0) {
-                throw std::format(STRINGS::BUILD_ERRORS::INCORRECT_VERT_COUNT, frame.num, symbol.hash_name);
-            }
+            if (frame.num_vertices % 6 != 0)
+                throw std::runtime_error(std::format(STRINGS::BUILD_ERRORS::INCORRECT_VERT_COUNT, frame.num, symbol.hash_name));
         }
     }
 

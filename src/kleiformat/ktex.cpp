@@ -24,7 +24,7 @@ void KTex::ReadFile(const std::filesystem::path& imagepath, KLEI_FORMATS tex_typ
     const bool is_zip = imagepath.extension() == ".zip";
 
     if (is_zip) {
-        ZipStream tex_data = GetZipStreamFromFile(imagepath, m_Name); //TODO we're assuming the anim is `build.bin`, true for DS/T but not for all formats!
+        ZipStream tex_data = GetZipStreamFromFile(imagepath, m_Name);
 
         ReadStream(tex_data.stream, tex_type);
 
@@ -33,7 +33,7 @@ void KTex::ReadFile(const std::filesystem::path& imagepath, KLEI_FORMATS tex_typ
         std::ifstream ktex(imagepath / m_Name, std::ios::in | std::ios::binary);
 
         if (!ktex.is_open())
-            throw std::format(STRINGS::FILE_NOOPEN, "KTex::ReadFile(const std::filesystem::path& imagepath)", imagepath.string());
+            throw std::runtime_error(std::format(STRINGS::FILE_NOOPEN, "KTex::ReadFile(const std::filesystem::path& imagepath)", imagepath.string()));
 
         ReadStream(ktex, tex_type);
 
@@ -45,7 +45,7 @@ void KTex::ReadStream(std::istream& ktex, KLEI_FORMATS tex_type) {
     std::string magic;
     read_bin_string(ktex, magic, 4);
     if (magic != K_MAGICS::TEX)
-        throw STRINGS::TEXTURE_ERRORS::INCORRECT_MAGIC;
+        throw std::runtime_error(STRINGS::TEXTURE_ERRORS::INCORRECT_MAGIC);
 
     m_Tex_type = tex_type;
 

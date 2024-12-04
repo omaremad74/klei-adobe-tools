@@ -46,6 +46,8 @@ class Anim {
         std::string GetFolderName(const element& e) const;
         //Get symbol name of a element (Make sure it's an element that belongs to us!)
         std::string GetSymbolName(const element& e) const;
+        //Get full name of animation including label if it exists
+        std::string GetFullAnimationName(const anim& a) const;
         // Get the number of total elements in our animation
         size_t GetNumElements() const;
         // Read a stream into our object
