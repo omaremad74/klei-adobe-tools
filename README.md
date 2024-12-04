@@ -28,11 +28,11 @@ library has it's own compilation functions implemented. This is only necessacary
 
 The `.jsfl` scripts are the main way to interact and make use of the dynamic library. You too can develop your own `.jsfl` scripts if you wish! It is JavaScript with Flash's API extended into it. Here is an unfortunately outdated, but latest [documentation](https://help.adobe.com/archive/en_US/flash/cs5/flash_cs5_extending.pdf) on the API.
 
+### Commands
 The following commands and scripts can be accessed within the `Commands` menu in Adobe Animate
 
-Using the `Decompile{KLEI_GAME}Format` script will prompt you to select the zipped data of the respective games data and then select an out path to place the XFL project.
-
-Using the `Compile{KLEI_GAME}Format` script will compile the CURRENTLY OPEN Animate project (FLA/XFL) into the respective games format, provided the project is properly formatted for compilation.
++ `Compile{KLEI_GAME}Format`: Compiles the currently open Animate project (FLA/XFL) and currently opened movie clip into the respective games format, provided project is properly formatted for compilation.
++ `Decompile{KLEI_GAME}Format`: Select files (folder/.zip) of respective games data and then select an out path to place the XFL project.
 
 ## Building From Source
 
@@ -46,7 +46,7 @@ This project requires the following:
     + ~~XCode (Mac)~~ *Mac Support not yet tested!*
 
 ### Windows
-Create a folder named `build` within project directory, and open command prompt with directoy changed to the newly created `build` folder and execute the following command:
+Create a folder named `build` within project directory, and open command prompt with directory changed to the newly created `build` folder and execute the following command:
 ```
 cmake ../ -A x64
 ```
