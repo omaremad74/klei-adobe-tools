@@ -99,6 +99,69 @@ void Anim::ReadStream(std::istream& kanim, KLEI_FORMATS game_format) {
     }
 }
 
+void Anim::WriteToFile(const std::filesystem::path& animpath) {
+    /*
+    switch (game_format) {
+    
+    }
+    */
+
+    std::ofstream kanim(animpath, std::ios::out | std::ios::binary);
+
+    if (!kanim.is_open())
+        throw std::runtime_error(std::format(STRINGS::FILE_NOOPEN, "Anim::WriteToFile", animpath.string()));
+
+    write_bin_kleistring(kanim, K_MAGICS::ANIM);
+    write_bin_data(kanim, 4); //TODO, convert klei format to anim and build version nums
+    write_bin_data(kanim, static_cast<uint32_t>(GetNumElements()));
+    write_bin_data(kanim, static_cast<uint32_t>(GetNumFrames()));
+    write_bin_data(kanim, 0U); // Events are deprecated.
+    write_bin_data(kanim, static_cast<uint32_t>(GetNumAnimations()));
+
+    for (const auto& anim : m_Anims) {
+        write_bin_kleistring(kanim, anim.name);
+
+        write_bin_data(kanim, anim.facings);
+        write_bin_data(kanim, anim.bank_hash);
+        write_bin_data(kanim, anim.frame_rate);
+
+        write_bin_data(kanim, static_cast<uint32_t>(anim.frames.size()));
+
+        for (const auto& frame : anim.frames) {
+            write_bin_data(kanim, frame.x);
+            write_bin_data(kanim, frame.y);
+            write_bin_data(kanim, frame.w);
+            write_bin_data(kanim, frame.h);
+
+            write_bin_data(kanim, 0U); //Events are deprecated.
+            write_bin_data(kanim, frame.elements.size());
+
+            for (auto& element : frame.elements) {
+                write_bin_data(kanim, element.symbol_hash);
+                write_bin_data(kanim, element.symbol_frame);
+                write_bin_data(kanim, element.folder_hash);
+
+                write_bin_data(kanim, element.a);
+                write_bin_data(kanim, element.b);
+                write_bin_data(kanim, element.c);
+                write_bin_data(kanim, element.d);
+                write_bin_data(kanim, element.tx);
+                write_bin_data(kanim, element.ty);
+                write_bin_data(kanim, element.tz);
+            }
+        }
+    }
+
+    write_bin_data(kanim, static_cast<uint32_t>(m_SymbolHashesToNames.size()));
+
+    for (const uint32_t hash : m_Hashes) {
+        write_bin_data(kanim, hash);
+        write_bin_kleistring(kanim, m_SymbolHashesToNames.at(hash));
+    }
+
+    kanim.close();
+}
+
 float Anim::ValidateFrameRate() const {
     float last_frame_rate = NULL;
 
@@ -132,6 +195,20 @@ std::string Anim::GetFullAnimationName(const anim& a) const {
         return a.name + label;
     
     return a.name;
+}
+
+size_t Anim::GetNumAnimations() const {
+    return m_Anims.size();
+}
+
+size_t Anim::GetNumFrames() const {
+    size_t total = 0;
+    //
+    for (const auto& animation : m_Anims) {
+        total += animation.frames.size();
+    }
+    //
+    return total;
 }
 
 size_t Anim::GetNumElements() const {

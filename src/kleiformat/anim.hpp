@@ -48,10 +48,16 @@ class Anim {
         std::string GetSymbolName(const element& e) const;
         //Get full name of animation including label if it exists
         std::string GetFullAnimationName(const anim& a) const;
+        // Get the number of animations in our anim
+        size_t GetNumAnimations() const;
+        // Get the number of total frames in our animation
+        size_t GetNumFrames() const;
         // Get the number of total elements in our animation
         size_t GetNumElements() const;
         // Read a stream into our object
         void ReadStream(std::istream& kanim, KLEI_FORMATS game_format);
+        // Write to a file
+        void WriteToFile(const std::filesystem::path& animpath);
 
     private:
 

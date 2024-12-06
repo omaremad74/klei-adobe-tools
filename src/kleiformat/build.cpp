@@ -38,10 +38,7 @@ void Build::ReadStream(std::istream& kbild, KLEI_FORMATS game_format, const std:
     read_bin_data(kbild, m_Version);
     read_bin_data(kbild, m_NumSymbols);
     read_bin_data(kbild, m_NumFrames);
-
-    uint32_t buildnamelength;
-    read_bin_data(kbild, buildnamelength);
-    read_bin_string(kbild, m_Name, buildnamelength);
+    read_bin_kleistring(kbild, m_Name);
 
     read_bin_data(kbild, m_NumMaterials);
     m_Materials.resize(m_NumMaterials);
@@ -98,6 +95,72 @@ void Build::ReadStream(std::istream& kbild, KLEI_FORMATS game_format, const std:
     }
 }
 
+void Build::WriteToFile(const std::filesystem::path& bildpath) {
+    /*
+    switch (game_format) {
+    
+    }
+    */
+
+    std::ofstream kbild(bildpath, std::ios::out | std::ios::binary);
+
+    if (!kbild.is_open())
+        throw std::runtime_error(std::format(STRINGS::FILE_NOOPEN, "Build::WriteToFile", bildpath.string()));
+
+    write_bin_kleistring(kbild, K_MAGICS::BILD);
+
+    write_bin_data(kbild, 6); //TODO, convert klei format to anim and build version nums
+    write_bin_data(kbild, static_cast<uint32_t>(GetNumSymbols()));
+    write_bin_data(kbild, static_cast<uint32_t>(GetNumFrames()));
+    write_bin_kleistring(kbild, m_Name);
+
+    write_bin_data(kbild, static_cast<uint32_t>(m_Materials.size()));
+    for (KTex& material : m_Materials) {
+        write_bin_kleistring(kbild, material.m_Name);
+        material.WriteImage(std::filesystem::path(bildpath).replace_filename(material.m_Name));
+    }
+
+    for (const auto& symbol : m_Symbols) {
+        write_bin_data(kbild, symbol.hash_name);
+        write_bin_data(kbild, static_cast<uint32_t>(symbol.frames.size()));
+
+        for (const auto& frame : symbol.frames) {
+            write_bin_data(kbild, frame.num);
+            write_bin_data(kbild, frame.duration);
+            write_bin_data(kbild, frame.x);
+            write_bin_data(kbild, frame.y);
+            write_bin_data(kbild, frame.w);
+            write_bin_data(kbild, frame.h);
+            write_bin_data(kbild, frame.vb_start_index);
+            write_bin_data(kbild, static_cast<uint32_t>(frame.vertices.size()));
+        }
+    }
+
+    write_bin_data(kbild, static_cast<uint32_t>(GetNumVertices()));
+
+    for (const auto& symbol : m_Symbols) {
+        for (const auto& frame : symbol.frames) {
+            for (const auto& vert : frame.vertices) {
+                write_bin_data(kbild, vert.x);
+                write_bin_data(kbild, vert.y);
+                write_bin_data(kbild, vert.z);
+                write_bin_data(kbild, vert.u);
+                write_bin_data(kbild, vert.v);
+                write_bin_data(kbild, vert.w);
+            }
+        }
+    }
+
+    write_bin_data(kbild, static_cast<uint32_t>(m_SymbolHashesToNames.size()));
+
+    for (const uint32_t hash : m_Hashes) {
+        write_bin_data(kbild, hash);
+        write_bin_kleistring(kbild, m_SymbolHashesToNames.at(hash));
+    }
+
+    kbild.close();
+}
+
 //Write images to path
 void Build::ExportAtlas(const std::filesystem::path& out_path) const {
     for (auto& sprite : ExportAtlas()) {
@@ -120,9 +183,14 @@ std::vector<Magick::Image> Build::ExportAtlas() const {
 
             Magick::Image& sprite = images.emplace_back();
             sprite.read(mip.data, Magick::Geometry(mip.width, mip.height), 8, "RGBA");
-            sprite.crop(Magick::Geometry(std::floor(w * mip.width + 0.5), std::floor(h * mip.height + 0.5), std::floor(mip.width * u), std::floor(mip.height * v)));
+            sprite.crop(Magick::Geometry(
+                static_cast<size_t>(std::floor(w * mip.width + 0.5)),
+                static_cast<size_t>(std::floor(h * mip.height + 0.5)),
+                static_cast<ssize_t>(std::floor(u * mip.width)),
+                static_cast<ssize_t>(std::floor(v * mip.height))
+            ));
 
-            Magick::Geometry scaling_geo(frame.w, frame.h);
+            Magick::Geometry scaling_geo(static_cast<size_t>(frame.w), static_cast<size_t>(frame.h));
             scaling_geo.aspect(true);
 
             sprite.resize(scaling_geo);
@@ -136,11 +204,27 @@ std::vector<Magick::Image> Build::ExportAtlas() const {
     return images;
 }
 
-uint32_t Build::GetNumFrames() const {
-    uint32_t total = 0;
+size_t Build::GetNumSymbols() const {
+    return m_Symbols.size();
+}
+
+size_t Build::GetNumFrames() const {
+    size_t total = 0;
     //
     for (const auto& symbol : m_Symbols) {
         total += symbol.frames.size();
+    }
+    //
+    return total;
+}
+
+size_t Build::GetNumVertices() const {
+    size_t total = 0;
+    //
+    for (const auto& symbol : m_Symbols) {
+        for (const auto& frame : symbol.frames) {
+            total += frame.vertices.size();
+        }
     }
     //
     return total;

@@ -37,10 +37,16 @@ class Build {
         std::vector<Magick::Image> ExportAtlas() const;
         //Get symbol name of a element (Make sure it's an element that belongs to us!)
         std::string GetSymbolName(const symbol& e) const;
+        // Get the number of total symbols in our build
+        size_t GetNumSymbols() const;
         // Get the number of total frames in our build
-        uint32_t GetNumFrames() const;
+        size_t GetNumFrames() const;
+        // Get the number of total vertices in our build
+        size_t GetNumVertices() const;
         // Read a stream into our object
         void ReadStream(std::istream& kbild, KLEI_FORMATS game_format, const std::filesystem::path& bildpath);
+        // Write to a file
+        void WriteToFile(const std::filesystem::path& bildpath);
 
         uint32_t m_Version;
         KLEI_FORMATS m_BildType;

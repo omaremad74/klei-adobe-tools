@@ -31,11 +31,23 @@ static void read_bin_string(std::istream& stream, std::string& str, const int le
     }
 }
 
+static void write_bin_string(std::ostream& stream, const std::string& str, const size_t length) {
+    if (!stream.write(str.data(), length)) {
+        throw std::runtime_error(STRINGS::UNABLE_WRITE_STREAM);
+    }
+}
+
 static void read_bin_kleistring(std::istream& stream, std::string& str) {
     uint32_t str_length;
 
     read_bin_data(stream, str_length);
     read_bin_string(stream, str, str_length);
+}
+
+static void write_bin_kleistring(std::ostream& stream, const std::string& str) {
+    const size_t str_length = str.length();
+    write_bin_data(stream, str_length);
+    write_bin_string(stream, str, str_length);
 }
 
 struct ZipStream {
